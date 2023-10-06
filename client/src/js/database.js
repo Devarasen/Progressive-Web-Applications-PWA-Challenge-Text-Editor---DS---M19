@@ -1,5 +1,8 @@
 import { openDB } from "idb";
 
+const DATABASE_NAME = "jate";
+const STORE_NAME = "jate";
+
 const initdb = async () =>
   openDB("jate", 1, {
     upgrade(db) {
