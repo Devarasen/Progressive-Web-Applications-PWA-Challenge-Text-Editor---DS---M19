@@ -11,7 +11,7 @@ Heroku deployed link: https://pwa-ds-m19-2193a01f8d9e.herokuapp.com/
 
 Github Repo: https://github.com/Devarasen/Progressive-Web-Applications-PWA-Challenge-Text-Editor---DS---M19
 
-![Screenshot](./public/assets/Project%20Screenshot.PNG)
+![Screenshot](./assets/Project%20Screenshot.PNG)
 
 ## Table of Contents
 
