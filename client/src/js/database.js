@@ -1,44 +1,21 @@
 import { openDB } from "idb";
 
-const DATABASE_NAME = "jate";
-const STORE_NAME = "jate";
-
 const initdb = async () =>
-  openDB(DATABASE_NAME, 1, {
+  openDB("jate", 1, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, {
-          keyPath: "id",
-          autoIncrement: true,
-        });
-        console.log("jate database created");
-      } else {
+      if (db.objectStoreNames.contains("jate")) {
         console.log("jate database already exists");
+        return;
       }
+      db.createObjectStore("jate", { keyPath: "id", autoIncrement: true });
+      console.log("jate database created");
     },
   });
 
-// Add content to the database
-export const putDb = async (content) => {
-  console.log("PUT to the database");
-  const jateDb = await openDB(DATABASE_NAME, 1);
-  const tx = jateDb.transaction(STORE_NAME, "readwrite");
-  const store = tx.objectStore(STORE_NAME);
-  const request = store.put({ todo: content });
-  const result = await request;
-  console.log("Data saved to the database", result);
-};
+// TODO: Add logic to a method that accepts some content and adds it to the database
+export const putDb = async (content) => console.error("putDb not implemented");
 
-// Get all content from the database
-export const getDb = async () => {
-  console.log("GET all from the database");
-  const jateDb = await openDB(DATABASE_NAME, 1);
-  const tx = jateDb.transaction(STORE_NAME, "readonly");
-  const store = tx.objectStore(STORE_NAME);
-  const request = store.getAll();
-  const result = await request;
-  console.log("result.value", result);
-  return result;
-};
+// TODO: Add logic for a method that gets all the content from the database
+export const getDb = async () => console.error("getDb not implemented");
 
 initdb();
