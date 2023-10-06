@@ -41,4 +41,12 @@ export const getDb = async () => {
   return result.length ? result[0].content : null; // Return the content if it exists, otherwise return null
 };
 
-initdb();
+initdb()
+  .then(async () => {
+    // Check the database after initialization
+    const dbCheck = await openDB(DATABASE_NAME, 1);
+    console.log(dbCheck.objectStoreNames); // Should include "jate"
+  })
+  .catch((error) => {
+    console.error("Error during database initialization:", error);
+  });
