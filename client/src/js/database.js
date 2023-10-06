@@ -3,56 +3,50 @@ import { openDB } from "idb";
 const DATABASE_NAME = "jate";
 const STORE_NAME = "jate";
 
-const initdb = async () => {
-  try {
-    await openDB(DATABASE_NAME, 1, {
-      upgrade(db) {
-        if (db.objectStoreNames.contains(STORE_NAME)) {
-          console.log("jate database already exists");
-          return;
-        }
+const initdb = async () =>
+  openDB(DATABASE_NAME, 1, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME, {
           keyPath: "id",
           autoIncrement: true,
         });
         console.log("jate database created");
-      },
-    });
-  } catch (error) {
-    console.error("Error initializing database:", error);
-  }
-};
+      } else {
+        console.log("jate database already exists");
+      }
+    },
+  });
 
-// TODO: Add logic to a method that accepts some content and adds it to the database
+// Add content to the database
 export const putDb = async (content) => {
-  try {
-    console.log("PUT to the database");
-    const todosDb = await openDB(DATABASE_NAME, 1);
-    const tx = todosDb.transaction(STORE_NAME, "readwrite");
-    const store = tx.objectStore(STORE_NAME);
-    const result = await store.put({ todo: content });
-    console.log("Data saved to the database", result);
-    todosDb.close();
-  } catch (error) {
-    console.error("Error saving to database:", error);
-  }
+  console.log("PUT to the database");
+  const jateDb = await openDB(DATABASE_NAME, 1);
+  const tx = jateDb.transaction(STORE_NAME, "readwrite");
+  const store = tx.objectStore(STORE_NAME);
+  const request = store.put({ content: content });
+  const result = await request;
+  console.log("Data saved to the database", result);
 };
 
-// TODO: Add logic for a method that gets all the content from the database
+// Get all content from the database
 export const getDb = async () => {
-  try {
-    console.log("GET all from the database");
-    const todosDb = await openDB(DATABASE_NAME, 1);
-    const tx = todosDb.transaction(STORE_NAME, "readonly");
-    const store = tx.objectStore(STORE_NAME);
-    const result = await store.getAll();
-    console.log("result.value", result);
-    todosDb.close();
-    return result;
-  } catch (error) {
-    console.error("Error getting data from database:", error);
-    throw error;
-  }
+  console.log("GET all from the database");
+  const jateDb = await openDB(DATABASE_NAME, 1);
+  const tx = jateDb.transaction(STORE_NAME, "readonly");
+  const store = tx.objectStore(STORE_NAME);
+  const request = store.getAll();
+  const result = await request;
+  console.log("result.value", result);
+  return result.length ? result[0].content : null; // Return the content if it exists, otherwise return null
 };
 
-initdb();
+initdb()
+  .then(async () => {
+    // Check the database after initialization
+    const dbCheck = await openDB(DATABASE_NAME, 1);
+    console.log(dbCheck.objectStoreNames); // Should include "jate"
+  })
+  .catch((error) => {
+    console.error("Error during database initialization:", error);
+  });
