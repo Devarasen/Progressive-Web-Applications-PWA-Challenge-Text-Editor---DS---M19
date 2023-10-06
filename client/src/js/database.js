@@ -24,7 +24,7 @@ export const putDb = async (content) => {
   const jateDb = await openDB(DATABASE_NAME, 1);
   const tx = jateDb.transaction(STORE_NAME, "readwrite");
   const store = tx.objectStore(STORE_NAME);
-  const request = store.put({ content: content });
+  const request = store.put({ todo: content });
   const result = await request;
   console.log("Data saved to the database", result);
 };
@@ -38,15 +38,7 @@ export const getDb = async () => {
   const request = store.getAll();
   const result = await request;
   console.log("result.value", result);
-  return result.length ? result[0].content : null; // Return the content if it exists, otherwise return null
+  return result;
 };
 
-initdb()
-  .then(async () => {
-    // Check the database after initialization
-    const dbCheck = await openDB(DATABASE_NAME, 1);
-    console.log(dbCheck.objectStoreNames); // Should include "jate"
-  })
-  .catch((error) => {
-    console.error("Error during database initialization:", error);
-  });
+initdb();
